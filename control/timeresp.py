@@ -1230,7 +1230,7 @@ def _get_ss_simo(sys, input=None, output=None, squeeze=None):
         return squeeze, _mimo2siso(sys_ss, input, output, warn_conversion=warn)
 
 
-def step_response(sys, T=None, X0=0., input=None, output=None, T_num=None,
+def step_response(sys,E=1, T=None, X0=0., input=None, output=None, T_num=None,
                   transpose=False, return_x=False, squeeze=None):
     # pylint: disable=W0622
     """Compute the step response for a linear system.
@@ -1248,6 +1248,9 @@ def step_response(sys, T=None, X0=0., input=None, output=None, T_num=None,
     ----------
     sys : StateSpace or TransferFunction
         LTI system to simulate
+        
+    E : int or loat, optional
+        The final value of the step input
 
     T : array_like or float, optional
         Time vector, or simulation time duration if a number. If T is not
@@ -1337,7 +1340,7 @@ def step_response(sys, T=None, X0=0., input=None, output=None, T_num=None,
     # Create the time and input vectors
     if T is None or np.asarray(T).size == 1:
         T = _default_time_vector(sys, N=T_num, tfinal=T, is_step=True)
-    U = np.ones_like(T)
+    U = E*(np.ones_like(T))
 
     # If we are passed a transfer function and X0 is non-zero, warn the user
     if isinstance(sys, TransferFunction) and np.any(X0 != 0):
